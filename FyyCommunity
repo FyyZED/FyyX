@@ -1,8 +1,7 @@
 local ALLOWED_PLACE_ID = 121864768012064
 
 if game.PlaceId ~= ALLOWED_PLACE_ID then
-    game.Players.LocalPlayer:Kick("Script ini hanya bisa digunakan di game FISHIT.")
-    return
+    return 
 end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/FyyZED/FyyX/refs/heads/main/main/Freescript.lua"))()
