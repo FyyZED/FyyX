@@ -1,6 +1,6 @@
-local ALLOWED_GAME_ID = 121864768012064
+local ALLOWED_PLACE_ID = 121864768012064
 
-if game.GameId ~= ALLOWED_GAME_ID then
+if game.PlaceId ~= ALLOWED_PLACE_ID then
     game.Players.LocalPlayer:Kick("Script ini hanya bisa digunakan di game FISHIT.")
     return
 end
