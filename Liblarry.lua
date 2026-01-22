@@ -5015,15 +5015,15 @@ Components.Window = (function()
 					end
 				end
 				
-				TweenService:Create(Window.Scale, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Scale = 0 }):Play()
-				task.delay(0.25, function()
+				TweenService:Create(Window.Scale, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
+				task.delay(0.5, function()
 					if Window.Minimized then
 						Window.Root.Visible = false
 					end
 				end)
 			else
 				Window.Root.Visible = true
-				TweenService:Create(Window.Scale, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = 1 }):Play()
+				TweenService:Create(Window.Scale, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = 1 }):Play()
 			end
 			if not MinimizeNotif then
 				MinimizeNotif = true
@@ -5905,9 +5905,9 @@ ElementsTable.Dropdown = (function()
 				SearchBox.Text = ""
 			end
 			DropdownHolderCanvas.Visible = true
-			RecalculateListPosition()
 			RecalculateListSize()
 			RecalculateCanvasSize()
+			RecalculateListPosition()
 			TweenService:Create(
 				DropdownHolderFrame,
 				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
