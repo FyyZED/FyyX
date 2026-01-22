@@ -5391,7 +5391,7 @@ ElementsTable.Dropdown = (function()
 			Opened = false,
 			Type = "Dropdown",
 			Callback = Config.Callback or function() end,
-			Search = (Config.Search == nil) and true or Config.Search,
+			Search = (Config.Search ~= nil) and Config.Search or false,
 			KeepSearch = Config.KeepSearch == true,
 			OpenToRight = windowDropdownsOutside
 		}
@@ -5642,6 +5642,9 @@ ElementsTable.Dropdown = (function()
 		local function RecalculateListPosition()
 			if not Dropdown.Opened then return end
 			if not DropdownHolderCanvas or not DropdownInner then return end
+			
+			-- Force update of layout
+			local _ = Library.GUI.AbsoluteSize
 			
 			local dropdownX = DropdownInner.AbsolutePosition.X
 			local dropdownY = DropdownInner.AbsolutePosition.Y
