@@ -1245,7 +1245,7 @@ local Creator = {
 		TextLabel = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
 			BorderColor3 = Color3.new(0, 0, 0),
-			Font = Enum.Font.SourceSans,
+			Font = Enum.Font.GothamBold,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
 			BackgroundTransparency = 1,
@@ -1255,7 +1255,7 @@ local Creator = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
 			BorderColor3 = Color3.new(0, 0, 0),
 			AutoButtonColor = false,
-			Font = Enum.Font.SourceSans,
+			Font = Enum.Font.GothamBold,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
 			TextSize = 14,
@@ -1264,7 +1264,7 @@ local Creator = {
 			BackgroundColor3 = Color3.new(1, 1, 1),
 			BorderColor3 = Color3.new(0, 0, 0),
 			ClearTextOnFocus = false,
-			Font = Enum.Font.SourceSans,
+			Font = Enum.Font.GothamBold,
 			Text = "",
 			TextColor3 = Color3.new(0, 0, 0),
 			TextSize = 14,
@@ -5640,6 +5640,7 @@ ElementsTable.Dropdown = (function()
 		end
 
 		local function RecalculateListPosition()
+			if not Dropdown.Opened then return end
 			if not DropdownHolderCanvas or not DropdownInner then return end
 			
 			local dropdownX = DropdownInner.AbsolutePosition.X
@@ -5829,7 +5830,11 @@ ElementsTable.Dropdown = (function()
 				end)
 			end
 		else
-			Creator.AddSignal(DropdownInner:GetPropertyChangedSignal("AbsolutePosition"), RecalculateListPosition)
+			Creator.AddSignal(DropdownInner:GetPropertyChangedSignal("AbsolutePosition"), function()
+				if Dropdown.Opened then
+					RecalculateListPosition()
+				end
+			end)
 			if windowRoot then
 				Creator.AddSignal(windowRoot:GetPropertyChangedSignal("AbsolutePosition"), function()
 					if Dropdown.Opened then
@@ -5905,14 +5910,20 @@ ElementsTable.Dropdown = (function()
 				SearchBox.Text = ""
 			end
 			DropdownHolderCanvas.Visible = true
+			
 			RecalculateListSize()
 			RecalculateCanvasSize()
 			RecalculateListPosition()
+			
+			-- Reset size to 0 for animation start
+			DropdownHolderFrame.Size = UDim2.fromScale(1, 0)
+			
 			TweenService:Create(
 				DropdownHolderFrame,
 				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
 				{ Size = UDim2.fromScale(1, 1) }
 			):Play()
+			
 			TweenService:Create(
 				DropdownIco,
 				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
@@ -5925,13 +5936,27 @@ ElementsTable.Dropdown = (function()
 			if Dropdown.OpenToRight then
 				Dropdown.SavedY = nil
 			end
-			DropdownHolderFrame.Size = UDim2.fromScale(1, 1)
-			DropdownHolderCanvas.Visible = false
+			
 			TweenService:Create(
 				DropdownIco,
 				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
 				{ Rotation = closeRotation }
 			):Play()
+			
+			local closeTween = TweenService:Create(
+				DropdownHolderFrame,
+				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+				{ Size = UDim2.fromScale(1, 0) }
+			)
+			closeTween:Play()
+			
+			task.delay(0.3, function()
+				if not Dropdown.Opened then -- Check if still closed (user didn't reopen quickly)
+					DropdownHolderCanvas.Visible = false
+					DropdownHolderFrame.Size = UDim2.fromScale(1, 1) -- Reset for safety, though Open handles it too
+				end
+			end)
+
 			Dropdown:Display()
 			for _, element in next, DropdownScrollFrame:GetChildren() do
 				if not element:IsA("UIListLayout") then
