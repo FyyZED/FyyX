@@ -1,6 +1,14 @@
 --[[
 
-Modifed by fyy
+███████╗██╗░░░░░██╗░░░██╗███████╗███╗░░██╗████████╗  ██████╗░██╗░░░░░██╗░░░██╗░██████╗
+██╔════╝██║░░░░░██║░░░██║██╔════╝████╗░██║╚══██╔══╝  ██╔══██╗██║░░░░░██║░░░██║██╔════╝
+█████╗░░██║░░░░░██║░░░██║█████╗░░██╔██╗██║░░░██║░░░  ██████╔╝██║░░░░░██║░░░██║╚█████╗░
+██╔══╝░░██║░░░░░██║░░░██║██╔══╝░░██║╚████║░░░██║░░░  ██╔═══╝░██║░░░░░██║░░░██║░╚═══██╗
+██║░░░░░███████╗╚██████╔╝███████╗██║░╚███║░░░██║░░░  ██║░░░░░███████╗╚██████╔╝██████╔╝
+╚═╝░░░░░╚══════╝░╚═════╝░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚═╝░░░░░╚══════╝░╚═════╝░╚═════╝░
+
+A modified version of Fluent
+https://fluent-pl.us
 
 ]]
 
@@ -719,40 +727,40 @@ local Themes = {
 	},
 	Violet = {
 		Name = "Violet",
-		Accent = Color3.fromRGB(170, 0, 255),
-		AcrylicMain = Color3.fromRGB(20, 10, 25),
-		AcrylicBorder = Color3.fromRGB(50, 30, 60),
-		AcrylicGradient = ColorSequence.new(Color3.fromRGB(25, 15, 35), Color3.fromRGB(30, 20, 40)),
-		AcrylicNoise = 0.94,
-		TitleBarLine = Color3.fromRGB(60, 40, 80),
-		Tab = Color3.fromRGB(100, 60, 140),
-		Element = Color3.fromRGB(40, 25, 55),
-		ElementBorder = Color3.fromRGB(50, 30, 70),
-		InElementBorder = Color3.fromRGB(60, 40, 80),
+		Accent = Color3.fromRGB(138, 43, 226), -- BlueViolet
+		AcrylicMain = Color3.fromRGB(10, 8, 15), -- Deepest violet/black
+		AcrylicBorder = Color3.fromRGB(40, 30, 60),
+		AcrylicGradient = ColorSequence.new(Color3.fromRGB(15, 10, 25), Color3.fromRGB(20, 15, 30)),
+		AcrylicNoise = 0.96,
+		TitleBarLine = Color3.fromRGB(50, 40, 70),
+		Tab = Color3.fromRGB(80, 60, 110),
+		Element = Color3.fromRGB(30, 20, 45),
+		ElementBorder = Color3.fromRGB(40, 30, 60),
+		InElementBorder = Color3.fromRGB(50, 40, 70),
 		ElementTransparency = 0.88,
-		ToggleSlider = Color3.fromRGB(120, 80, 160),
-		ToggleToggled = Color3.fromRGB(25, 15, 35),
-		SliderRail = Color3.fromRGB(120, 80, 160),
-		DropdownFrame = Color3.fromRGB(60, 40, 85),
-		DropdownHolder = Color3.fromRGB(35, 20, 50),
-		DropdownBorder = Color3.fromRGB(50, 30, 70),
-		DropdownOption = Color3.fromRGB(100, 60, 140),
-		Keybind = Color3.fromRGB(100, 60, 140),
-		Input = Color3.fromRGB(100, 60, 140),
-		InputFocused = Color3.fromRGB(20, 10, 25),
-		InputIndicator = Color3.fromRGB(150, 100, 200),
-		Dialog = Color3.fromRGB(35, 20, 50),
-		DialogHolder = Color3.fromRGB(25, 15, 35),
-		DialogHolderLine = Color3.fromRGB(50, 30, 70),
-		DialogButton = Color3.fromRGB(50, 30, 70),
-		DialogButtonBorder = Color3.fromRGB(70, 40, 90),
-		DialogBorder = Color3.fromRGB(50, 30, 70),
-		DialogInput = Color3.fromRGB(40, 25, 55),
-		DialogInputLine = Color3.fromRGB(60, 40, 80),
-		Text = Color3.fromRGB(240, 240, 240),
-		SubText = Color3.fromRGB(170, 170, 170),
-		Hover = Color3.fromRGB(70, 40, 90),
-		HoverChange = 0.06
+		ToggleSlider = Color3.fromRGB(100, 70, 140),
+		ToggleToggled = Color3.fromRGB(20, 15, 30),
+		SliderRail = Color3.fromRGB(100, 70, 140),
+		DropdownFrame = Color3.fromRGB(45, 35, 60),
+		DropdownHolder = Color3.fromRGB(25, 20, 35),
+		DropdownBorder = Color3.fromRGB(40, 30, 60),
+		DropdownOption = Color3.fromRGB(80, 60, 110),
+		Keybind = Color3.fromRGB(100, 70, 140),
+		Input = Color3.fromRGB(100, 70, 140),
+		InputFocused = Color3.fromRGB(15, 10, 20),
+		InputIndicator = Color3.fromRGB(130, 90, 180),
+		Dialog = Color3.fromRGB(25, 20, 35),
+		DialogHolder = Color3.fromRGB(20, 15, 30),
+		DialogHolderLine = Color3.fromRGB(40, 30, 60),
+		DialogButton = Color3.fromRGB(40, 30, 60),
+		DialogButtonBorder = Color3.fromRGB(60, 50, 80),
+		DialogBorder = Color3.fromRGB(40, 30, 60),
+		DialogInput = Color3.fromRGB(30, 20, 45),
+		DialogInputLine = Color3.fromRGB(50, 40, 70),
+		Text = Color3.fromRGB(245, 245, 245), -- Off-white
+		SubText = Color3.fromRGB(150, 140, 170),
+		Hover = Color3.fromRGB(60, 50, 80),
+		HoverChange = 0.05
 	},
 	Arctic = {
 		Name = "Arctic",
@@ -3594,16 +3602,8 @@ Components.Notification = (function()
 
 		NewNotification.AcrylicPaint = Acrylic.AcrylicPaint()
 
-		NewNotification.Icon = New("ImageLabel", {
-			Position = UDim2.new(0, 10, 0, 10),
-			Size = UDim2.fromOffset(24, 24),
-			Image = "rbxassetid://106899268176689",
-			BackgroundTransparency = 1,
-			Parent = nil, -- Will be parented to Root
-		})
-
 		NewNotification.Title = New("TextLabel", {
-			Position = UDim2.new(0, 44, 0, 12), -- Shifted right
+			Position = UDim2.new(0, 14, 0, 17),
 			Text = Config.Title,
 			RichText = true,
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -3612,7 +3612,7 @@ Components.Notification = (function()
 			TextSize = 13,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
-			Size = UDim2.new(1, -56, 0, 20), -- Adjusted size
+			Size = UDim2.new(1, -12, 0, 12),
 			TextWrapped = true,
 			BackgroundTransparency = 1,
 			ThemeTag = {
@@ -3656,8 +3656,8 @@ Components.Notification = (function()
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1,
-			Position = UDim2.fromOffset(44, 40), -- Shifted right
-			Size = UDim2.new(1, -56, 0, 0), -- Adjusted size
+			Position = UDim2.fromOffset(14, 40),
+			Size = UDim2.new(1, -28, 0, 0),
 		}, {
 			New("UIListLayout", {
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -3670,7 +3670,7 @@ Components.Notification = (function()
 
 		NewNotification.CloseButton = New("TextButton", {
 			Text = "",
-			Position = UDim2.new(1, -10, 0, 10),
+			Position = UDim2.new(1, -14, 0, 13),
 			Size = UDim2.fromOffset(20, 20),
 			AnchorPoint = Vector2.new(1, 0),
 			BackgroundTransparency = 1,
@@ -3701,7 +3701,6 @@ Components.Notification = (function()
 			Position = UDim2.fromScale(1, 0),
 		}, {
 			NewNotification.AcrylicPaint.Frame,
-			NewNotification.Icon,
 			NewNotification.Title,
 			NewNotification.CloseButton,
 			NewNotification.LabelHolder,
@@ -4553,6 +4552,16 @@ Components.Window = (function()
 			SearchFrame,
 			Window.TabHolder,
 			Selector,
+			New("Frame", {
+				Name = "Divider",
+				Size = UDim2.new(0, 1, 1, 0),
+				Position = UDim2.new(1, 0, 0, 0),
+				AnchorPoint = Vector2.new(1, 0),
+				ThemeTag = {
+					BackgroundColor3 = "TitleBarLine",
+				},
+				BackgroundTransparency = 0.5,
+			}),
 		})
 
 		Window.TabFrame = TabFrame
@@ -5080,13 +5089,28 @@ Components.Window = (function()
 				end)
 				
 				TweenService:Create(Window.Scale, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
+				
+				-- Optimization: Immediately hide acrylic and other heavy elements
+				if Window.AcrylicPaint and Window.AcrylicPaint.Model then
+					Window.AcrylicPaint.Model.Transparency = 1
+				end
+				
 				task.delay(0.5, function()
 					if Window.Minimized then
 						Window.Root.Visible = false
+						-- Double check acrylic is hidden
+						if Window.AcrylicPaint and Window.AcrylicPaint.Model then
+							Window.AcrylicPaint.Model.Transparency = 1
+						end
 					end
 				end)
 			else
 				Window.Root.Visible = true
+				-- Restore acrylic transparency based on theme/settings
+				if Window.AcrylicPaint and Window.AcrylicPaint.Model and Library.UseAcrylic then
+					Window:SetBackgroundImageTransparency(Window.BackgroundImageTransparency)
+				end
+				
 				TweenService:Create(Window.Scale, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = 1 }):Play()
 			end
 			if not MinimizeNotif then
