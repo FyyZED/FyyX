@@ -5011,11 +5011,13 @@ Components.Window = (function()
 			Window.Minimized = not Window.Minimized
 
 			if Window.Minimized then
-				for _, Option in next, Library.Options do
-					if Option and Option.Type == "Dropdown" and Option.Opened then
-						pcall(function() Option:Close() end)
+				task.spawn(function()
+					for _, Option in next, Library.Options do
+						if Option and Option.Type == "Dropdown" and Option.Opened then
+							pcall(function() Option:Close() end)
+						end
 					end
-				end
+				end)
 				
 				TweenService:Create(Window.Scale, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
 				task.delay(0.5, function()
@@ -5395,7 +5397,7 @@ ElementsTable.Dropdown = (function()
 			Callback = Config.Callback or function() end,
 			Search = (Config.Search ~= nil) and Config.Search or false,
 			KeepSearch = Config.KeepSearch == true,
-			OpenToRight = windowDropdownsOutside
+			OpenToRight = (Config.OpenToRight ~= nil) and Config.OpenToRight or false
 		}
 
 		if Dropdown.Multi and Config.AllowNull then
@@ -5767,20 +5769,8 @@ ElementsTable.Dropdown = (function()
 					targetY = Dropdown.SavedY + dropdownHeight + 5
 				end
 			else
-				local spaceBelow = viewportHeight - (dropdownY + dropdownHeight)
-				local spaceAbove = dropdownY
-				
-				if canvasHeight <= spaceBelow then
-					targetY = dropdownY + dropdownHeight + 5
-				elseif canvasHeight <= spaceAbove then
-					targetY = dropdownY - canvasHeight - 5
-				else
-					if spaceBelow > spaceAbove then
-						targetY = dropdownY + dropdownHeight + 5
-					else
-						targetY = math.max(5, dropdownY - canvasHeight - 5)
-					end
-				end
+				-- Always open downwards
+				targetY = dropdownY + dropdownHeight + 5
 			end
 			
 			DropdownHolderCanvas.Position = UDim2.fromOffset(targetX, targetY)
@@ -5802,7 +5792,12 @@ ElementsTable.Dropdown = (function()
 			local searchHeight = Dropdown.Search and 38 or 0
 			local innerMargins = 10
 			local estimatedContent = (visibleCount > 0) and (visibleCount * itemHeight + (visibleCount - 1) * padding + innerMargins + searchHeight) or (innerMargins + searchHeight)
-			local maxHeight = 392
+			
+			-- Calculate max height for 4 items
+			local maxVisibleItems = 4
+			local calculatedMaxHeight = (innerMargins + searchHeight) + (maxVisibleItems * itemHeight) + ((maxVisibleItems - 1) * padding)
+			
+			local maxHeight = calculatedMaxHeight
 			local targetHeight = math.min(estimatedContent, maxHeight)
 			
 			local canvasWidth = math.max(170, ListSizeX > 0 and (ListSizeX + 20) or 170)
