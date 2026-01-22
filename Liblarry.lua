@@ -1,14 +1,6 @@
 --[[
 
-███████╗██╗░░░░░██╗░░░██╗███████╗███╗░░██╗████████╗  ██████╗░██╗░░░░░██╗░░░██╗░██████╗
-██╔════╝██║░░░░░██║░░░██║██╔════╝████╗░██║╚══██╔══╝  ██╔══██╗██║░░░░░██║░░░██║██╔════╝
-█████╗░░██║░░░░░██║░░░██║█████╗░░██╔██╗██║░░░██║░░░  ██████╔╝██║░░░░░██║░░░██║╚█████╗░
-██╔══╝░░██║░░░░░██║░░░██║██╔══╝░░██║╚████║░░░██║░░░  ██╔═══╝░██║░░░░░██║░░░██║░╚═══██╗
-██║░░░░░███████╗╚██████╔╝███████╗██║░╚███║░░░██║░░░  ██║░░░░░███████╗╚██████╔╝██████╔╝
-╚═╝░░░░░╚══════╝░╚═════╝░╚══════╝╚═╝░░╚══╝░░░╚═╝░░░  ╚═╝░░░░░╚══════╝░╚═════╝░╚═════╝░
-
-A modified version of Fluent
-https://fluent-pl.us
+Modifed by fyy
 
 ]]
 
@@ -56,7 +48,8 @@ local Themes = {
 		"Cloud",
 		"Grape",
 		"Bloody",
-		"Arctic"
+		"Arctic",
+		"Violet"
 	},
 	Dark = {
 		Name = "Dark",
@@ -724,6 +717,43 @@ local Themes = {
 		Hover = Color3.fromRGB(181, 0, 0),
 		HoverChange = 0.04
 	},
+	Violet = {
+		Name = "Violet",
+		Accent = Color3.fromRGB(170, 0, 255),
+		AcrylicMain = Color3.fromRGB(20, 10, 25),
+		AcrylicBorder = Color3.fromRGB(50, 30, 60),
+		AcrylicGradient = ColorSequence.new(Color3.fromRGB(25, 15, 35), Color3.fromRGB(30, 20, 40)),
+		AcrylicNoise = 0.94,
+		TitleBarLine = Color3.fromRGB(60, 40, 80),
+		Tab = Color3.fromRGB(100, 60, 140),
+		Element = Color3.fromRGB(40, 25, 55),
+		ElementBorder = Color3.fromRGB(50, 30, 70),
+		InElementBorder = Color3.fromRGB(60, 40, 80),
+		ElementTransparency = 0.88,
+		ToggleSlider = Color3.fromRGB(120, 80, 160),
+		ToggleToggled = Color3.fromRGB(25, 15, 35),
+		SliderRail = Color3.fromRGB(120, 80, 160),
+		DropdownFrame = Color3.fromRGB(60, 40, 85),
+		DropdownHolder = Color3.fromRGB(35, 20, 50),
+		DropdownBorder = Color3.fromRGB(50, 30, 70),
+		DropdownOption = Color3.fromRGB(100, 60, 140),
+		Keybind = Color3.fromRGB(100, 60, 140),
+		Input = Color3.fromRGB(100, 60, 140),
+		InputFocused = Color3.fromRGB(20, 10, 25),
+		InputIndicator = Color3.fromRGB(150, 100, 200),
+		Dialog = Color3.fromRGB(35, 20, 50),
+		DialogHolder = Color3.fromRGB(25, 15, 35),
+		DialogHolderLine = Color3.fromRGB(50, 30, 70),
+		DialogButton = Color3.fromRGB(50, 30, 70),
+		DialogButtonBorder = Color3.fromRGB(70, 40, 90),
+		DialogBorder = Color3.fromRGB(50, 30, 70),
+		DialogInput = Color3.fromRGB(40, 25, 55),
+		DialogInputLine = Color3.fromRGB(60, 40, 80),
+		Text = Color3.fromRGB(240, 240, 240),
+		SubText = Color3.fromRGB(170, 170, 170),
+		Hover = Color3.fromRGB(70, 40, 90),
+		HoverChange = 0.06
+	},
 	Arctic = {
 		Name = "Arctic",
 		Accent = Color3.fromRGB(64, 224, 255),
@@ -766,7 +796,7 @@ local Themes = {
 }
 
 local Library = {
-	Version = "1.2.2",
+	Version = "1.2.3",
 
 	OpenFrames = {},
 	Options = {},
@@ -3564,8 +3594,16 @@ Components.Notification = (function()
 
 		NewNotification.AcrylicPaint = Acrylic.AcrylicPaint()
 
+		NewNotification.Icon = New("ImageLabel", {
+			Position = UDim2.new(0, 10, 0, 10),
+			Size = UDim2.fromOffset(24, 24),
+			Image = "rbxassetid://106899268176689",
+			BackgroundTransparency = 1,
+			Parent = nil, -- Will be parented to Root
+		})
+
 		NewNotification.Title = New("TextLabel", {
-			Position = UDim2.new(0, 14, 0, 17),
+			Position = UDim2.new(0, 44, 0, 12), -- Shifted right
 			Text = Config.Title,
 			RichText = true,
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -3574,7 +3612,7 @@ Components.Notification = (function()
 			TextSize = 13,
 			TextXAlignment = "Left",
 			TextYAlignment = "Center",
-			Size = UDim2.new(1, -12, 0, 12),
+			Size = UDim2.new(1, -56, 0, 20), -- Adjusted size
 			TextWrapped = true,
 			BackgroundTransparency = 1,
 			ThemeTag = {
@@ -3618,8 +3656,8 @@ Components.Notification = (function()
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1,
-			Position = UDim2.fromOffset(14, 40),
-			Size = UDim2.new(1, -28, 0, 0),
+			Position = UDim2.fromOffset(44, 40), -- Shifted right
+			Size = UDim2.new(1, -56, 0, 0), -- Adjusted size
 		}, {
 			New("UIListLayout", {
 				SortOrder = Enum.SortOrder.LayoutOrder,
@@ -3632,7 +3670,7 @@ Components.Notification = (function()
 
 		NewNotification.CloseButton = New("TextButton", {
 			Text = "",
-			Position = UDim2.new(1, -14, 0, 13),
+			Position = UDim2.new(1, -10, 0, 10),
 			Size = UDim2.fromOffset(20, 20),
 			AnchorPoint = Vector2.new(1, 0),
 			BackgroundTransparency = 1,
@@ -3649,15 +3687,25 @@ Components.Notification = (function()
 			}),
 		})
 
+		NewNotification.ProgressBar = New("Frame", {
+			Size = UDim2.new(1, 0, 0, 3),
+			Position = UDim2.new(0, 0, 1, -3),
+			BackgroundColor3 = Color3.fromRGB(170, 0, 255), -- Violet/Purple
+			BorderSizePixel = 0,
+			Parent = nil, -- Will be parented to Root
+		})
+
 		NewNotification.Root = New("Frame", {
 			BackgroundTransparency = 1,
 			Size = UDim2.new(1, 0, 1, 0),
 			Position = UDim2.fromScale(1, 0),
 		}, {
 			NewNotification.AcrylicPaint.Frame,
+			NewNotification.Icon,
 			NewNotification.Title,
 			NewNotification.CloseButton,
 			NewNotification.LabelHolder,
+			NewNotification.ProgressBar,
 		})
 
 		if Config.Content == "" then
@@ -3755,7 +3803,19 @@ Components.Notification = (function()
 
 		NewNotification:Open()
 		if Config.Duration then
-			task.delay(Config.Duration, function()
+			-- Progress Bar Animation
+			local duration = Config.Duration
+			
+			-- Ensure size starts at full
+			NewNotification.ProgressBar.Size = UDim2.new(1, 0, 0, 3) 
+			
+			TweenService:Create(
+				NewNotification.ProgressBar,
+				TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+				{ Size = UDim2.new(0, 0, 0, 3) }
+			):Play()
+
+			task.delay(duration, function()
 				NewNotification:Close()
 			end)
 		end
@@ -5014,7 +5074,7 @@ Components.Window = (function()
 				task.spawn(function()
 					for _, Option in next, Library.Options do
 						if Option and Option.Type == "Dropdown" and Option.Opened then
-							pcall(function() Option:Close() end)
+							pcall(function() Option:Close(true) end)
 						end
 					end
 				end)
@@ -5931,31 +5991,38 @@ ElementsTable.Dropdown = (function()
 			):Play()
 		end
 
-		function Dropdown:Close()
+		function Dropdown:Close(instant)
 			Dropdown.Opened = false
 			if Dropdown.OpenToRight then
 				Dropdown.SavedY = nil
 			end
 			
-			TweenService:Create(
-				DropdownIco,
-				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-				{ Rotation = closeRotation }
-			):Play()
-			
-			local closeTween = TweenService:Create(
-				DropdownHolderFrame,
-				TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-				{ Size = UDim2.fromScale(1, 0) }
-			)
-			closeTween:Play()
-			
-			task.delay(0.3, function()
-				if not Dropdown.Opened then -- Check if still closed (user didn't reopen quickly)
-					DropdownHolderCanvas.Visible = false
-					DropdownHolderFrame.Size = UDim2.fromScale(1, 1) -- Reset for safety, though Open handles it too
-				end
-			end)
+			if instant then
+				DropdownIco.Rotation = closeRotation
+				DropdownHolderFrame.Size = UDim2.fromScale(1, 0)
+				DropdownHolderCanvas.Visible = false
+				DropdownHolderFrame.Size = UDim2.fromScale(1, 1) -- Reset state for next open
+			else
+				TweenService:Create(
+					DropdownIco,
+					TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+					{ Rotation = closeRotation }
+				):Play()
+				
+				local closeTween = TweenService:Create(
+					DropdownHolderFrame,
+					TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+					{ Size = UDim2.fromScale(1, 0) }
+				)
+				closeTween:Play()
+				
+				task.delay(0.3, function()
+					if not Dropdown.Opened then -- Check if still closed (user didn't reopen quickly)
+						DropdownHolderCanvas.Visible = false
+						DropdownHolderFrame.Size = UDim2.fromScale(1, 1) -- Reset for safety, though Open handles it too
+					end
+				end)
+			end
 
 			Dropdown:Display()
 			for _, element in next, DropdownScrollFrame:GetChildren() do
@@ -9550,7 +9617,7 @@ local InterfaceManager = {} do
 			Description = "Adjusts the window transparency.",
 
 
-			Default = 1,
+			Default = 0,
 
 
 			Min = 0,
