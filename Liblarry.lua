@@ -3962,6 +3962,7 @@ Components.TitleBar = (function()
 			Size = UDim2.new(1, 0, 0, 42),
 			BackgroundTransparency = 1,
 			Parent = Config.Parent,
+			Active = true,
 		}, {
 			New("Frame", {
 				Size = UDim2.new(1, -16, 1, 0),
@@ -4116,6 +4117,7 @@ Components.Window = (function()
 			Size = UDim2.fromOffset(20, 20),
 			BackgroundTransparency = 1,
 			Position = UDim2.new(1, -20, 1, -2),
+			Active = true,
 		})
 
 		local SearchElements = {}
