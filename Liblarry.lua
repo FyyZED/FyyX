@@ -5080,6 +5080,9 @@ Components.Window = (function()
 			Window.Minimized = not Window.Minimized
 
 			if Window.Minimized then
+				-- Optimization: Hide heavy content immediately
+				if Window.ContainerCanvas then Window.ContainerCanvas.Visible = false end
+				
 				task.spawn(function()
 					for _, Option in next, Library.Options do
 						if Option and Option.Type == "Dropdown" and Option.Opened then
@@ -5088,17 +5091,15 @@ Components.Window = (function()
 					end
 				end)
 				
-				TweenService:Create(Window.Scale, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
+				TweenService:Create(Window.Scale, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
 				
-				-- Optimization: Immediately hide acrylic and other heavy elements
 				if Window.AcrylicPaint and Window.AcrylicPaint.Model then
 					Window.AcrylicPaint.Model.Transparency = 1
 				end
 				
-				task.delay(0.5, function()
+				task.delay(0.3, function()
 					if Window.Minimized then
 						Window.Root.Visible = false
-						-- Double check acrylic is hidden
 						if Window.AcrylicPaint and Window.AcrylicPaint.Model then
 							Window.AcrylicPaint.Model.Transparency = 1
 						end
@@ -5106,12 +5107,19 @@ Components.Window = (function()
 				end)
 			else
 				Window.Root.Visible = true
-				-- Restore acrylic transparency based on theme/settings
 				if Window.AcrylicPaint and Window.AcrylicPaint.Model and Library.UseAcrylic then
 					Window:SetBackgroundImageTransparency(Window.BackgroundImageTransparency)
 				end
 				
-				TweenService:Create(Window.Scale, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = 1 }):Play()
+				-- Smoother restore animation without Back overshoot
+				TweenService:Create(Window.Scale, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 1 }):Play()
+				
+				-- Restore heavy content after animation starts (or ends for max smoothness)
+				task.delay(0.1, function()
+					if not Window.Minimized and Window.ContainerCanvas then 
+						Window.ContainerCanvas.Visible = true 
+					end
+				end)
 			end
 			if not MinimizeNotif then
 				MinimizeNotif = true
