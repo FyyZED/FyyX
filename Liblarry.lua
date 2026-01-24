@@ -5081,9 +5081,12 @@ Components.Window = (function()
 
 			if Window.Minimized then
 				task.spawn(function()
+					local count = 0
 					for _, Option in next, Library.Options do
 						if Option and Option.Type == "Dropdown" and Option.Opened then
+							count = count + 1
 							pcall(function() Option:Close(true) end)
+							if count % 10 == 0 then task.wait() end -- Yield every 10 closes to prevent freeze
 						end
 					end
 				end)
