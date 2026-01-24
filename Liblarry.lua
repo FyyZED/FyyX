@@ -4037,7 +4037,7 @@ Components.TitleBar = (function()
 
 				Config.Icon and New("ImageLabel", {
 					Image = Config.Icon,
-					Size = UDim2.fromOffset(20, 20),
+					Size = UDim2.fromOffset(24, 24),
 					BackgroundTransparency = 1,
 					LayoutOrder = 1,
 					ThemeTag = {
@@ -4050,10 +4050,10 @@ Components.TitleBar = (function()
 					Text = Config.Title,
 					FontFace = Font.new(
 						"rbxasset://fonts/families/GothamSSm.json",
-						Enum.FontWeight.Regular,
+						Enum.FontWeight.Bold,
 						Enum.FontStyle.Normal
 					),
-					TextSize = 12,
+					TextSize = 16,
 					TextXAlignment = "Left",
 					TextYAlignment = "Center",
 					Size = UDim2.fromScale(0, 1),
@@ -5080,50 +5080,37 @@ Components.Window = (function()
 			Window.Minimized = not Window.Minimized
 
 			if Window.Minimized then
-				task.spawn(function()
-					local count = 0
+				-- INSTANT HIDE - NO ANIMATION, NO LAG!
+				Window.Scale.Scale = 0
+				Window.Root.Visible = false
+				
+				if Window.ContainerCanvas then 
+					Window.ContainerCanvas.Visible = false 
+				end
+				if Window.AcrylicPaint and Window.AcrylicPaint.Model then
+					Window.AcrylicPaint.Model.Transparency = 1
+				end
+				
+				-- Close dropdowns in background (non-blocking)
+				task.defer(function()
 					for _, Option in next, Library.Options do
 						if Option and Option.Type == "Dropdown" and Option.Opened then
-							count = count + 1
 							pcall(function() Option:Close(true) end)
-							if count % 10 == 0 then task.wait() end -- Yield every 10 closes to prevent freeze
 						end
-					end
-				end)
-				
-				-- Animate scale first
-				TweenService:Create(Window.Scale, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
-				
-				-- Defer hiding heavy content to avoid stutter at start of animation
-				task.delay(0.05, function()
-					if Window.Minimized then
-						if Window.ContainerCanvas then Window.ContainerCanvas.Visible = false end
-						if Window.AcrylicPaint and Window.AcrylicPaint.Model then
-							Window.AcrylicPaint.Model.Transparency = 1
-						end
-					end
-				end)
-				
-				-- Completely hide root after animation
-				task.delay(0.3, function()
-					if Window.Minimized then
-						Window.Root.Visible = false
 					end
 				end)
 			else
+				-- INSTANT SHOW - NO ANIMATION, NO LAG!
 				Window.Root.Visible = true
+				Window.Scale.Scale = 1
+				
 				if Window.AcrylicPaint and Window.AcrylicPaint.Model and Library.UseAcrylic then
 					Window:SetBackgroundImageTransparency(Window.BackgroundImageTransparency)
 				end
 				
-				TweenService:Create(Window.Scale, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 1 }):Play()
-				
-				-- Restore heavy content later to keep maximize animation smooth
-				task.delay(0.2, function()
-					if not Window.Minimized and Window.ContainerCanvas then 
-						Window.ContainerCanvas.Visible = true 
-					end
-				end)
+				if Window.ContainerCanvas then 
+					Window.ContainerCanvas.Visible = true 
+				end
 			end
 			if not MinimizeNotif then
 				MinimizeNotif = true
@@ -7517,6 +7504,35 @@ ElementsTable.Input = (function()
 	return Element
 end)()
 
+ElementsTable.Space = (function()
+	local Element = {}
+	Element.__index = Element
+	Element.__type = "Space"
+	
+	function Element:New(Config)
+		local Container = self.Container
+		local Height = Config.Height or 10
+		
+		local SpaceFrame = New("Frame", {
+			Size = UDim2.new(1, 0, 0, Height),
+			BackgroundTransparency = 1,
+			Parent = Container,
+			ThemeTag = {
+				BackgroundColor3 = "Background",
+			},
+		})
+		
+		return {
+			Frame = SpaceFrame,
+			SetHeight = function(self, newHeight)
+				SpaceFrame.Size = UDim2.new(1, 0, 0, newHeight)
+			end
+		}
+	end
+	
+	return Element
+end)()
+
 local NotificationModule = Components.Notification
 NotificationModule:Init(GUI)
 
@@ -9277,6 +9293,54 @@ local SaveManager = {} do
 
 		end})
 
+	section:AddButton({Title = "Delete config", Callback = function()
+		local name = SaveManager.Options.SaveManager_ConfigList.Value
+		
+		if not name then
+			return self.Library:Notify({
+				Title = "Interface",
+				Content = "Config loader",
+				SubContent = "No config selected to delete",
+				Duration = 5
+			})
+		end
+		
+		self.Library.Window:Dialog({
+			Title = "Delete Config",
+			Content = string.format("Are you sure you want to delete config '%s'? This action cannot be undone!", name),
+			Buttons = {
+				{
+					Title = "Delete",
+					Callback = function()
+						local fullPath = self.Folder .. "/" .. name .. ".json"
+						
+						if isfile(fullPath) then
+							delfile(fullPath)
+							SaveManager.Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+							SaveManager.Options.SaveManager_ConfigList:SetValue(nil)
+							
+							self.Library:Notify({
+								Title = "Interface",
+								Content = "Config loader",
+								SubContent = string.format("Deleted config %q", name),
+								Duration = 5
+							})
+						else
+							self.Library:Notify({
+								Title = "Interface",
+								Content = "Config loader",
+								SubContent = "Config file not found",
+								Duration = 5
+							})
+						end
+					end
+				},
+				{
+					Title = "Cancel"
+				}
+			}
+		})
+	end})
 
 
 
