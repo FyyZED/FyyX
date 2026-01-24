@@ -5080,9 +5080,6 @@ Components.Window = (function()
 			Window.Minimized = not Window.Minimized
 
 			if Window.Minimized then
-				-- Optimization: Hide heavy content immediately
-				if Window.ContainerCanvas then Window.ContainerCanvas.Visible = false end
-				
 				task.spawn(function()
 					for _, Option in next, Library.Options do
 						if Option and Option.Type == "Dropdown" and Option.Opened then
@@ -5091,18 +5088,23 @@ Components.Window = (function()
 					end
 				end)
 				
+				-- Animate scale first
 				TweenService:Create(Window.Scale, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 0 }):Play()
 				
-				if Window.AcrylicPaint and Window.AcrylicPaint.Model then
-					Window.AcrylicPaint.Model.Transparency = 1
-				end
-				
-				task.delay(0.3, function()
+				-- Defer hiding heavy content to avoid stutter at start of animation
+				task.delay(0.05, function()
 					if Window.Minimized then
-						Window.Root.Visible = false
+						if Window.ContainerCanvas then Window.ContainerCanvas.Visible = false end
 						if Window.AcrylicPaint and Window.AcrylicPaint.Model then
 							Window.AcrylicPaint.Model.Transparency = 1
 						end
+					end
+				end)
+				
+				-- Completely hide root after animation
+				task.delay(0.3, function()
+					if Window.Minimized then
+						Window.Root.Visible = false
 					end
 				end)
 			else
@@ -5111,11 +5113,10 @@ Components.Window = (function()
 					Window:SetBackgroundImageTransparency(Window.BackgroundImageTransparency)
 				end
 				
-				-- Smoother restore animation without Back overshoot
 				TweenService:Create(Window.Scale, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), { Scale = 1 }):Play()
 				
-				-- Restore heavy content after animation starts (or ends for max smoothness)
-				task.delay(0.1, function()
+				-- Restore heavy content later to keep maximize animation smooth
+				task.delay(0.2, function()
 					if not Window.Minimized and Window.ContainerCanvas then 
 						Window.ContainerCanvas.Visible = true 
 					end
