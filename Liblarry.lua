@@ -11283,6 +11283,184 @@ AddSignal(MobileMinimizeButton.MouseButton1Click, function()
 
 end)
 
+-- Floating Icon Utility
+function Library:CreateFloatingIcon(WindowObject, IconImageId)
+    local PG = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local UIS = game:GetService("UserInputService")
+    local CAS = game:GetService("ContextActionService")
+    
+    local uisConn = nil
+    local dragging = false
+    local dragInput, dragStart, startPos
+    
+    local function CreateIcon()
+        local existing = PG:FindFirstChild("CustomFloatingIcon_FyyHub")
+        if existing then existing:Destroy() end
+        
+        local g = Instance.new("ScreenGui")
+        g.Name = "CustomFloatingIcon_FyyHub"
+        g.DisplayOrder = 999
+        g.ResetOnSpawn = false
+        
+        local f = Instance.new("Frame")
+        f.Size = UDim2.fromOffset(45, 45)
+        f.Position = UDim2.new(0, 50, 0.4, 0)
+        f.AnchorPoint = Vector2.new(0.5, 0.5)
+        f.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        f.BorderSizePixel = 0
+        f.Parent = g
+        
+        local s = Instance.new("UIStroke")
+        s.Color = Color3.fromRGB(138, 43, 226)
+        s.Thickness = 2
+        s.Parent = f
+        
+        Instance.new("UICorner", f).CornerRadius = UDim.new(0, 12)
+        
+        local i = Instance.new("ImageLabel")
+        i.Image = IconImageId or "rbxassetid://106899268176689"
+        i.BackgroundTransparency = 1
+        i.Size = UDim2.new(1, -4, 1, -4)
+        i.Position = UDim2.fromScale(0.5, 0.5)
+        i.AnchorPoint = Vector2.new(0.5, 0.5)
+        i.Parent = f
+        
+        Instance.new("UICorner", i).CornerRadius = UDim.new(0, 10)
+        
+        g.Parent = PG
+        return g, f
+    end
+    
+    local function SetupIcon(g, f)
+        if uisConn then
+            uisConn:Disconnect()
+            uisConn = nil
+        end
+        
+        local dragActionName = "IconDragBlocker"
+        
+        local function updatePosition(input)
+            local delta = input.Position - dragStart
+            f.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+        
+        f.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+               input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                startPos = f.Position
+                
+                -- Block camera movement
+                CAS:BindActionAtPriority(dragActionName, function()
+                    return Enum.ContextActionResult.Sink
+                end, false, Enum.ContextActionPriority.High.Value + 50, 
+                    Enum.UserInputType.Touch, 
+                    Enum.UserInputType.MouseButton1, 
+                    Enum.UserInputType.MouseMovement
+                )
+                
+                local moved = false
+                local c1, c2
+                
+                c1 = input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                        c1:Disconnect()
+                        CAS:UnbindAction(dragActionName)
+                        
+                        -- If not moved, minimize window
+                        if not moved and WindowObject then
+                            WindowObject:Minimize()
+                        end
+                    end
+                end)
+                
+                c2 = input.Changed:Connect(function()
+                    if dragging and (input.Position - dragStart).Magnitude > 5 then
+                        moved = true
+                        c2:Disconnect()
+                    end
+                end)
+            end
+        end)
+        
+        f.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement or 
+               input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+            end
+        end)
+        
+        uisConn = UIS.InputChanged:Connect(function(input)
+            if input == dragInput and dragging then
+                updatePosition(input)
+            end
+        end)
+        
+        -- Sync visibility with window
+        if WindowObject then
+            local function updateIconVisibility()
+                g.Enabled = not WindowObject.Visible
+            end
+            
+            local conn
+            if WindowObject.OnVisibilityChanged then
+                conn = WindowObject:OnVisibilityChanged(function(visible)
+                    g.Enabled = not visible
+                end)
+            else
+                task.spawn(function()
+                    while g and g.Parent do
+                        updateIconVisibility()
+                        task.wait(0.3)
+                    end
+                    if conn then conn:Disconnect() end
+                end)
+            end
+            
+            g.Enabled = not WindowObject.Visible
+        end
+    end
+    
+    local function Initialize()
+        if not game.Players.LocalPlayer.Character then
+            game.Players.LocalPlayer.CharacterAdded:Wait()
+        end
+        
+        local gui, frame = CreateIcon()
+        if gui and frame then
+            SetupIcon(gui, frame)
+        end
+    end
+    
+    -- Auto recreate on character respawn
+    game.Players.LocalPlayer.CharacterAdded:Connect(function()
+        task.wait(1)
+        Initialize()
+    end)
+    
+    -- Initial creation
+    Initialize()
+    
+    -- Return cleanup function
+    return function()
+        if uisConn then
+            uisConn:Disconnect()
+            uisConn = nil
+        end
+        local existing = PG:FindFirstChild("CustomFloatingIcon_FyyHub")
+        if existing then
+            existing:Destroy()
+        end
+    end
+end
+
     
 
 if RunService:IsStudio() then task.wait(0.01) end
